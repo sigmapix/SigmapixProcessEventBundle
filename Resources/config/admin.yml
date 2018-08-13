@@ -1,0 +1,6 @@
+services:
+    process.event.admin:
+        class: Sigmapix\ProcessEventBundle\Admin\ProcessEventEntityAdmin
+        arguments: [~, Sigmapix\ProcessEventBundle\Entity\ProcessEventEntity, ~]
+        tags:
+        - { name: sonata.admin, manager_type: orm, label_translator_strategy: sonata.admin.label.strategy.noop, group: admin, label: ProcessEventEntity_list }
