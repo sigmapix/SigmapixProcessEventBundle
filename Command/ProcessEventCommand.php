@@ -4,6 +4,7 @@ namespace Sigmapix\ProcessEventBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
 use Sigmapix\ProcessEventBundle\Entity\ProcessEventEntity;
 use Sigmapix\ProcessEventBundle\Event\ProcessEvent;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -17,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ProcessEventCommand extends ContainerAwareCommand
 {
+    const NAME = 'process:event:execute';
     /**
      * @var EntityManagerInterface
      */
@@ -40,7 +42,7 @@ class ProcessEventCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('process:event:execute')
+            ->setName(self::NAME)
             ->setDescription('This command handles a given ProcessEvent id using Symfony Process feature. Default behavior is Asynchronous.')
             ->addOption(
                 'id',
@@ -53,7 +55,8 @@ class ProcessEventCommand extends ContainerAwareCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return void
+     * @throws ORMException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -73,16 +76,14 @@ class ProcessEventCommand extends ContainerAwareCommand
                 /** @var ProcessEvent $processEvent */
                 $processEvent = new $className($processEventEntity->getArgs());
                 $processEvent->setContainer($this->getContainer());
-                $processEvent->run($processEventEntity); // TODO handle errors
-                $this->log('  > run succeeded: now persisting and flushing processEvent: ' . (string)$processEventEntity);
-                $this->em->persist($processEventEntity);
-                $this->em->flush();
+                $processEvent->run($processEventEntity);
+                $this->log('  > run ended');
             } else {
                 $this->log('!! ERROR: no processEvent found with given identifier');
             }
             $this->log();
         } else {
-            $output->writeln('!! ERROR: given options are invalid');
+            $this->log('!! ERROR: given options are invalid');
         }
         $this->log('*** finished **');
     }

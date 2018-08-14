@@ -175,7 +175,7 @@ class ProcessEventEntity
     /**
      * @return string
      */
-    public function getOutput(): string
+    public function getOutput()
     {
         return $this->output;
     }
@@ -207,7 +207,7 @@ class ProcessEventEntity
     /**
      * @return int
      */
-    public function getPid(): int
+    public function getPid()
     {
         return $this->pid;
     }
@@ -215,7 +215,7 @@ class ProcessEventEntity
     /**
      * @param int $pid
      */
-    public function setPid(int $pid)
+    public function setPid($pid)
     {
         $this->pid = $pid;
     }
@@ -223,7 +223,7 @@ class ProcessEventEntity
     /**
      * @return string
      */
-    public function getErrorOutput(): string
+    public function getErrorOutput()
     {
         return $this->errorOutput;
     }

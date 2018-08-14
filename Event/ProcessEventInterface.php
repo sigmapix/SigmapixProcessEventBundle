@@ -13,10 +13,10 @@ interface ProcessEventInterface
     const NEW = 'newProcessEvent';
 
     /**
-     * @param ProcessEventEntity $processEvent
+     * @param ProcessEventEntity $processEventEntity
      * @return bool
      */
-    public function run(ProcessEventEntity $processEvent);
+    public function run(ProcessEventEntity $processEventEntity);
 
     /**
      * @return string
