@@ -73,7 +73,7 @@ class ProcessEventSubscriber implements EventSubscriberInterface
         $this->em->flush();
 
         $process = new Process([$this->php, '-d memory_limit=2G', 'bin/console', 'process:event:execute', '--id', $processEventEntity->getId()]);
-        $process->setEnv(['dev']);
+        $process->setEnv(['prod']);
         $process->setWorkingDirectory($this->container->get('kernel')->getRootDir() . '/../');
         $process->setTimeout(self::TIMEOUT);
 
