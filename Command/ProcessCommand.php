@@ -5,20 +5,21 @@ namespace Sigmapix\ProcessEventBundle\Command;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
-use Sigmapix\ProcessEventBundle\Entity\ProcessEventEntity;
-use Sigmapix\ProcessEventBundle\Event\ProcessEvent;
+use Sigmapix\ProcessEventBundle\Entity\ProcessEntity;
+use Sigmapix\ProcessEventBundle\Process\Process;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ProcessEventCommand
+ * TODO : no more --id, should be moved in crontab and will execute all executable Processes
+ * Class ProcessCommand
  * @package Sigmapix\ProcessEventBundle\Command
  */
-class ProcessEventCommand extends ContainerAwareCommand
+class ProcessCommand extends ContainerAwareCommand
 {
-    const NAME = 'process:event:execute';
+    const NAME = 'sigmapix:sonata:process';
     /**
      * @var EntityManagerInterface
      */
@@ -37,18 +38,18 @@ class ProcessEventCommand extends ContainerAwareCommand
     /**
      * @var EntityRepository
      */
-    private $processEventRepo;
+    private $processRepo;
 
     protected function configure()
     {
         $this
             ->setName(self::NAME)
-            ->setDescription('This command handles a given ProcessEvent id using Symfony Process feature. Default behavior is Asynchronous.')
-            ->addOption(
+            ->setDescription('This command handles a given Process id using Symfony Process feature. Default behavior is Asynchronous.') // TODO update
+            ->addOption( // TODO remove
                 'id',
                 'id',
                 InputOption::VALUE_REQUIRED,
-                'ProcessEvent id to execute (required)'
+                'Process id to execute (required)'
             );
     }
 
@@ -61,25 +62,25 @@ class ProcessEventCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->em = $this->getContainer()->get('doctrine')->getManager();
-        $this->processEventRepo = $this->em->getRepository(ProcessEventEntity::class);
+        $this->processRepo = $this->em->getRepository(ProcessEntity::class);
         $this->out = $output;
         $this->jobId = substr(sha1(uniqid(mt_rand(), true)), 0, 10);
-
+        // TODO adapt
         $this->log('*** starting ***', true);
-        $processEventEntityId = $input->getOption('id');
-        if ($processEventEntityId !== null && is_numeric($processEventEntityId)) {
-            $this->log('** handling processEvent id=' . $processEventEntityId, true);
-            /** @var ProcessEventEntity $processEventEntity */
-            $processEventEntity = $this->processEventRepo->find((int)$processEventEntityId);
-            if ($processEventEntity) {
-                $className = $processEventEntity->getClassName();
-                /** @var ProcessEvent $processEvent */
-                $processEvent = new $className($processEventEntity->getArgs());
-                $processEvent->setContainer($this->getContainer());
-                $processEvent->run($processEventEntity);
+        $processEntityId = $input->getOption('id');
+        if ($processEntityId !== null && is_numeric($processEntityId)) {
+            $this->log('** handling process id=' . $processEntityId, true);
+            /** @var ProcessEntity $processEntity */
+            $processEntity = $this->processRepo->find((int)$processEntityId);
+            if ($processEntity) {
+                $className = $processEntity->getClassName();
+                /** @var Process $process */
+                $process = new $className($processEntity->getArgs());
+                $process->setContainer($this->getContainer());
+                $process->run($processEntity);
                 $this->log('  > run ended');
             } else {
-                $this->log('!! ERROR: no processEvent found with given identifier');
+                $this->log('!! ERROR: no process found with given identifier');
             }
             $this->log();
         } else {

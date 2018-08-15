@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
- * ProcessEvent
+ * ProcessEntity
  *
  * @ORM\Table()
  * @ORM\Entity()
  */
-class ProcessEventEntity
+class ProcessEntity
 {
     use TimestampableEntity;
 

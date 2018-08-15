@@ -5,13 +5,14 @@ namespace Sigmapix\ProcessEventBundle\Admin;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 
 /**
- * Class ProcessEventEntityAdmin
+ * Class ProcessEntityAdmin
  * @package Sigmapix\ProcessEventBundle\Admin
  */
-class ProcessEventEntityAdmin extends AbstractAdmin
+class ProcessEntityAdmin extends AbstractAdmin
 {
     /**
      * @param DatagridMapper $datagridMapper
@@ -28,8 +29,7 @@ class ProcessEventEntityAdmin extends AbstractAdmin
             ->add('output')
             ->add('errorOutput')
             ->add('status')
-            ->add('progress')
-        ;
+            ->add('progress');
     }
 
     /**
@@ -37,17 +37,18 @@ class ProcessEventEntityAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
+        $actions = [
+            'show' => [],
+            'download' => [
+                'template' => 'SigmapixProcessEventBundle:Admin/Button:list__action_download.html.twig',
+            ]
+        ];
+
         $listMapper
             ->add('name')
             ->add('status')
             ->add('progress')
-            ->add('_action', null, [
-                'actions' => [
-                    'show' => []
-                    // TODO 'download' $filePath and 'output'/'errors' actions (dynamically)
-                ]
-            ])
-        ;
+            ->add('_action', null, ['actions' => $actions]);
     }
 
     /**
@@ -65,7 +66,14 @@ class ProcessEventEntityAdmin extends AbstractAdmin
             ->add('output')
             ->add('errorOutput')
             ->add('status')
-            ->add('progress')
-        ;
+            ->add('progress');
+    }
+
+    /**
+     * @param RouteCollection $collection
+     */
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        $collection->add('download', 'download');
     }
 }

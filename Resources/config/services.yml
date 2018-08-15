@@ -5,4 +5,4 @@ services:
         public: true
     Sigmapix\ProcessEventBundle\:
         resource: '../../*'
-        exclude: '../../{Admin,Entity,Event,Repository,Tests}'
+        exclude: '../../{Admin,Entity,Process,Repository,Tests}'

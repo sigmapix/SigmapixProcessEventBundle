@@ -1,0 +1,91 @@
+{% extends 'SonataAdminBundle:CRUD:base_edit.html.twig' %}
+
+{% block form %}
+
+    {% set url = 'import' %}
+
+    {% if not admin.hasRoute(url)%}
+        <div>
+            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
+        </div>
+    {% else %}
+    {% if errorLog is not empty %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header">
+                        Erreurs d'importation
+                    </div>
+                    <div class="box-body">
+                        <code>
+                        {% for key, error in errorLog %}
+                            Ligne {{ key }} : {{ error }}<br>
+                        {% endfor %}
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+        <form
+              class="form-horizontal"
+              role="form"
+              action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': object.id}) }}{% endblock %}"
+              {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
+              method="POST"
+              {% if not sonata_admin.adminPool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+              {% block sonata_form_attributes %}{% endblock %}
+              >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+
+            {% block sonata_pre_fieldsets %}
+                <div class="row">
+            {% endblock %}
+
+            {% block sonata_tab_content %}
+
+                    <div class="col-md-12">
+                        <div class="box box-primary">
+                            <div class="box-header">
+                                <h4 class="box-title">
+                                    {{ 'import_chose_headers'|trans({}, 'messages') }}
+                                </h4>
+                            </div>
+                            <div class="box-body">
+                                <div class="sonata-ba-collapsed-fields">
+                                    {{ form_row(form.windowsEncoding) }}
+                                    {{ form_row(form.startLine) }}
+                                    {{ form_row(form.numberOfLines) }}
+                                    {% for importField in importFields %}
+                                        {{ form_row(attribute(form, importField)) }}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% endblock %}
+
+            {% block sonata_post_fieldsets %}
+                </div>
+            {% endblock %}
+
+            
+
+            {% block formactions %}
+                <div class="sonata-ba-form-actions well well-small form-actions">
+                {% block sonata_form_actions %}
+
+                        {{ form_widget(form.import) }}
+                        {{ form_widget(form.import_if_no_errors) }}
+                        {{ form_rest(form) }}
+                {% endblock %}
+                </div>
+            {% endblock formactions %}
+        </form>
+    {% endif%}
+
+{% endblock %}

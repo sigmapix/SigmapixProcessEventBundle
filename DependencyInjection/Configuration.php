@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('sigmapix_process_event');
+        $treeBuilder->root('sigmapix_sonata_process');
 
         return $treeBuilder;
     }
