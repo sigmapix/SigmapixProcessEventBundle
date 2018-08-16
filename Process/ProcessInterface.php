@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle\Process;
 
@@ -14,10 +15,10 @@ interface ProcessInterface
      * @param ProcessEntity $processEntity
      * @return bool
      */
-    public function run(ProcessEntity $processEntity);
+    public function run(ProcessEntity $processEntity): bool;
 
     /**
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 }

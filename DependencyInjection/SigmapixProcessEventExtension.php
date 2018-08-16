@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle\DependencyInjection;
 
@@ -14,6 +15,9 @@ class SigmapixProcessEventExtension extends Extension
 {
     /**
      * {@inheritdoc}
+     * @throws \Exception
+     * @throws \Exception
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {

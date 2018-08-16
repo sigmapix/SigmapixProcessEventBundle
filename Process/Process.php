@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle\Process;
 
-use Sigmapix\ProcessEventBundle\Entity\ProcessEntity;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
  * Class Process
@@ -16,58 +15,48 @@ abstract class Process implements ProcessInterface
     use ContainerAwareTrait;
 
     /**
-     * @var array
+     * @var ParameterBag
      */
-    protected $args; // TODO should be a ParametersBag (string|int values only)
+    private $args;
 
     /**
-     * ReplyReceivedEvent constructor.
-     * @param Request $request
+     * Process constructor.
+     * @param array $args
      */
-    public function __construct(array $args = [])
+    public function __construct(array $args = null)
     {
-        $this->args = $args;
+        $this->args = new ParameterBag();
+        foreach ($args as $key => $value) {
+            if (\is_int($value) || \is_string($value) || $value === null) {
+                $this->args->set($key, $value);
+            } else {
+                trigger_error('Process expected $args to be integer or string', E_USER_ERROR);
+            }
+        }
     }
 
     /**
      * @return array
      */
-    public function getArgs()
+    public function getArgs(): array
     {
-        return $this->args;
+        return $this->args->all();
     }
 
     /**
-     * @param ProcessEntity $processEntity
-     * @return void
-     * @throws \Doctrine\ORM\ORMException
+     * @param string $name
+     * @return int|string|null
      */
-    public function run(ProcessEntity $processEntity)
+    public function get(string $name)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-
-        $processEntity->setStatus(ProcessEntity::RUNNING);
-        $em->persist($processEntity);
-        $em->flush();
-        try {
-            $value = $this->execute($processEntity);
-            $processEntity->setProgress(100);
-        } catch (\Exception $exception) {
-            $value = false;
-            $processEntity->setErrorOutput($processEntity->getErrorOutput().PHP_EOL.PHP_EOL.$exception->getMessage());
-        }
-        $processEntity->setStatus($value ? ProcessEntity::SUCCEED : ProcessEntity::FAILED);
-        $em->persist($processEntity);
-        $em->flush();
+        return $this->args->get($name);
     }
 
     /**
-     * @param ProcessEntity $processEntity
-     * @return bool
+     * @param string $message
      */
-    protected function execute(ProcessEntity $processEntity)
+    public function log(string $message)
     {
-        // ...
-        return true;
+        echo $message.PHP_EOL;
     }
 }

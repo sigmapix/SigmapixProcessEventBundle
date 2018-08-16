@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle\Entity;
 
@@ -69,20 +70,6 @@ class ProcessEntity
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $command;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $pid;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $filePath;
 
     /**
@@ -111,7 +98,7 @@ class ProcessEntity
      */
     public function __toString()
     {
-        return sprintf('%s', (string) $this->getName());
+        return sprintf('%s', $this->getName());
     }
 
     /**
@@ -186,38 +173,6 @@ class ProcessEntity
     public function setOutput(string $output)
     {
         $this->output = $output;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCommand(): string
-    {
-        return $this->command;
-    }
-
-    /**
-     * @param string $command
-     */
-    public function setCommand(string $command)
-    {
-        $this->command = $command;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPid()
-    {
-        return $this->pid;
-    }
-
-    /**
-     * @param int $pid
-     */
-    public function setPid($pid)
-    {
-        $this->pid = $pid;
     }
 
     /**

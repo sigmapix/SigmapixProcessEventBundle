@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Sigmapix\ProcessEventBundle\Controller;
 
 use Sigmapix\ProcessEventBundle\Entity\ProcessEntity;
 
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Class ProcessEntityCRUDController
@@ -12,9 +15,9 @@ use Sonata\AdminBundle\Controller\CRUDController as Controller;
 class ProcessEntityCRUDController extends Controller
 {
     /**
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
-    public function downloadAction()
+    public function downloadAction(): BinaryFileResponse
     {
         /** @var ProcessEntity $processEntity */
         $processEntity = $this->admin->getSubject();

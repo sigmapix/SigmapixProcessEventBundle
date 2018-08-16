@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle;
 
@@ -19,6 +20,8 @@ class SigmapixProcessEventBundle extends Bundle
      *
      * This method can be overridden to register compilation passes,
      * other extensions, ...
+     *
+     * @param ContainerBuilder $container
      */
     public function build(ContainerBuilder $container)
     {

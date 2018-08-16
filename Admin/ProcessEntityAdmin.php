@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle\Admin;
 
@@ -23,8 +24,6 @@ class ProcessEntityAdmin extends AbstractAdmin
             ->add('id')
             ->add('name')
             ->add('className')
-            ->add('command')
-            ->add('pid')
             ->add('filePath')
             ->add('output')
             ->add('errorOutput')
@@ -40,7 +39,7 @@ class ProcessEntityAdmin extends AbstractAdmin
         $actions = [
             'show' => [],
             'download' => [
-                'template' => 'SigmapixProcessEventBundle:Admin/Button:list__action_download.html.twig',
+                'template' => 'SigmapixProcessEventBundle:Admin/Button:list__action_download.html.twig'
             ]
         ];
 
@@ -60,8 +59,6 @@ class ProcessEntityAdmin extends AbstractAdmin
             ->add('id')
             ->add('name')
             ->add('className')
-            ->add('command')
-            ->add('pid')
             ->add('filePath')
             ->add('output')
             ->add('errorOutput')
