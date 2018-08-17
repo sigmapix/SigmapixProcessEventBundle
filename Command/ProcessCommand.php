@@ -58,9 +58,9 @@ class ProcessCommand extends ContainerAwareCommand
         $this->jobId = substr(sha1(uniqid((string)mt_rand(), true)), 0, 10);
 
         $this->log('*** starting ***', true);
-        /** @var ProcessEntity[] $processes */
-        $processes = $this->processRepo->findBy(['status' => ProcessEntity::NEW]);
-        foreach ($processes as $processEntity) {
+        /** @var ProcessEntity $processEntity */
+        $processEntity = $this->processRepo->findOneBy(['status' => ProcessEntity::NEW]);
+        if ($processEntity && $processEntity instanceof ProcessEntity) {
             // Immediately locking Process
             $this->log('** locking process id=' . $processEntity->getId(), true);
             $processEntity->setStatus(ProcessEntity::RUNNING);
@@ -86,7 +86,7 @@ class ProcessCommand extends ContainerAwareCommand
                 $processEntity->setOutput($stdout);
                 $this->em->flush();
                 ob_end_flush();
-                $this->log('  > run ended'.PHP_EOL);
+                $this->log('  > run ended' . PHP_EOL);
             }
         }
         $this->log('*** finished **');
