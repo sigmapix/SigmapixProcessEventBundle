@@ -59,6 +59,7 @@ class ProcessEntityAdmin extends AbstractAdmin
             ->add('id')
             ->add('name')
             ->add('className')
+            ->add('args')
             ->add('filePath')
             ->add('output')
             ->add('errorOutput')
