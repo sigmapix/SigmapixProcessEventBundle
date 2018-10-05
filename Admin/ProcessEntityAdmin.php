@@ -3,11 +3,16 @@ declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle\Admin;
 
+use Symfony\Component\Form\CallbackTransformer;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\CoreBundle\Form\Type\ImmutableArrayType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class ProcessEntityAdmin
@@ -48,6 +53,29 @@ class ProcessEntityAdmin extends AbstractAdmin
             ->add('status')
             ->add('progress')
             ->add('_action', null, ['actions' => $actions]);
+    }
+
+    protected function configureFormFields(FormMapper $form)
+    {
+        $form
+            ->add('name')
+            ->add('className')
+            ->add('status')
+            ->add('args', TextareaType::class)
+           ;
+        $form->getFormBuilder()->get('args')->addModelTransformer(new CallbackTransformer(
+                function ($tagsAsArray) {
+                    if (empty($tagsAsArray)) {
+                        return '';
+                    }
+                    return json_encode($tagsAsArray);
+                },
+                function ($tagsAsString) {
+                    // transform the string back to an array
+                    return json_decode(trim(preg_replace('/\s\s+/', ' ', $tagsAsString)), true);
+                }
+            ))
+            ;
     }
 
     /**

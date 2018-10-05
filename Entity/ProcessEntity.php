@@ -91,7 +91,6 @@ class ProcessEntity
         $this->status = self::NEW;
         $this->progress = 0;
         $this->args = [];
-        $this->name = 'New process';
     }
 
     /**
@@ -115,7 +114,7 @@ class ProcessEntity
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
@@ -147,7 +146,7 @@ class ProcessEntity
     /**
      * @return string
      */
-    public function getClassName(): string
+    public function getClassName()
     {
         return $this->className;
     }
