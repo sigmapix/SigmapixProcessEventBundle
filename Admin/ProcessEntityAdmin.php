@@ -50,8 +50,8 @@ class ProcessEntityAdmin extends AbstractAdmin
 
         $listMapper
             ->add('name')
-            ->add('status')
-            ->add('progress')
+            ->add('statusName', null, ['label' => 'status'])
+            ->add('progress', null, ['template' => 'SigmapixProcessEventBundle:Admin:list__progress.html.twig'])
             ->add('_action', null, ['actions' => $actions]);
     }
 

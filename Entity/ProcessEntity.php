@@ -200,6 +200,27 @@ class ProcessEntity
     }
 
     /**
+     * @return array
+     */
+    public function getStatusList(): array
+    {
+        return [
+            self::NEW => 'NEW',
+            self::RUNNING => 'RUNNING',
+            self::SUCCEED => 'SUCCEED',
+            self::FAILED => 'FAILED'
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusName(): string
+    {
+        return $this->getStatusList()[$this->getStatus()];
+    }
+
+    /**
      * @param int $status
      */
     public function setStatus(int $status)

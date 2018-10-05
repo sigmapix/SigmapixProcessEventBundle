@@ -1,0 +1,7 @@
+{% extends '@SonataAdmin/CRUD/base_list_field.html.twig' %}
+
+{% block field %}
+    {% if object %}
+        <progress style="width: 100%;" value="{{ object.progress }}" max="100"></progress>{{ object.progress }}%
+    {% endif %}
+{% endblock %}
