@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Sigmapix\ProcessEventBundle\Process;
 
+use Sigmapix\ProcessEventBundle\Entity\ProcessEntity;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
@@ -58,5 +59,14 @@ abstract class Process implements ProcessInterface
     public function log(string $message)
     {
         echo $message.PHP_EOL;
+    }
+
+    /**
+     * @param bool $value
+     * @return int
+     */
+    public function getFinalStatus(bool $value = true)
+    {
+        return $value ? ProcessEntity::SUCCEED : ProcessEntity::FAILED;
     }
 }

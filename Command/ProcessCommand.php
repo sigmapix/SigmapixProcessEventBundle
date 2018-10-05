@@ -77,7 +77,7 @@ class ProcessCommand extends ContainerAwareCommand
                 ob_start();
                 $value = $process->run($processEntity);
                 $processEntity->setProgress(100);
-                $processEntity->setStatus($value ? ProcessEntity::SUCCEED : ProcessEntity::FAILED);
+                $processEntity->setStatus($process->getFinalStatus($value));
             } catch (\Exception $e) {
                 $processEntity->setErrorOutput($e->getMessage());
                 $processEntity->setStatus(ProcessEntity::FAILED);
