@@ -91,6 +91,7 @@ class ProcessEntity
         $this->status = self::NEW;
         $this->progress = 0;
         $this->args = [];
+        $this->name = 'New process';
     }
 
     /**
