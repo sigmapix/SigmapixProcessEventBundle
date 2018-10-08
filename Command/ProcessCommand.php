@@ -59,7 +59,7 @@ class ProcessCommand extends ContainerAwareCommand
 
         $this->log('*** starting ***', true);
         /** @var ProcessEntity $processEntity */
-        $processEntity = $this->processRepo->findOneBy(['status' => ProcessEntity::NEW]);
+        $processEntity = $this->processRepo->findOneBy(['status' => ProcessEntity::NEW], ['updatedAt' => 'ASC']);
         if ($processEntity && $processEntity instanceof ProcessEntity) {
             // Immediately locking Process
             $this->log('** locking process id=' . $processEntity->getId(), true);
