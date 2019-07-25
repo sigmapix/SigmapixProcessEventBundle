@@ -86,11 +86,33 @@ class ProcessEntity
      */
     private $errorOutput;
 
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $processedAt;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $finishedAt;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json_array")
+     */
+    private $finishedAtSteps;
+
     public function __construct()
     {
         $this->status = self::NEW;
         $this->progress = 0;
         $this->args = [];
+        $this->finishedAtSteps = [];
     }
 
     /**
@@ -222,10 +244,18 @@ class ProcessEntity
 
     /**
      * @param int $status
+     *
+     * @throws \Exception
      */
     public function setStatus(int $status)
     {
         $this->status = $status;
+
+        if ($status === self::RUNNING) { // sets processedAt datetime when process starts RUNNING
+            $this->processedAt = new \DateTime();
+        } else if ($status !== self::NEW) { // sets a finishedAt datetime step as process ended
+            $this->addFinishedAtStep($this->getClassName());
+        }
     }
 
     /**
@@ -258,5 +288,55 @@ class ProcessEntity
     public function setArgs(array $args)
     {
         $this->args = $args;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getProcessedAt()
+    {
+        return $this->processedAt;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getFinishedAt()
+    {
+        return $this->finishedAt;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFinishedAtSteps(): array
+    {
+        return $this->finishedAtSteps;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinishedAtStepsAsString(): string
+    {
+        $map = array_map(function($v) {
+            /** @var \DateTime $dateTime */
+            $dateTime = new \DateTime($v['finishedAt']['date']);
+            return $v['initiator'] . ' : ' . $dateTime->format('d M Y H:i:s');
+        }, $this->finishedAtSteps);
+        return implode(PHP_EOL, $map);
+    }
+
+    /**
+     * @param string $initiator
+     * @return array
+     * @throws \Exception
+     */
+    public function addFinishedAtStep(string $initiator): array
+    {
+        $this->finishedAt = new \DateTime();
+        $this->finishedAtSteps[] = ['initiator' => $initiator, 'finishedAt' => $this->finishedAt];
+
+        return $this->finishedAtSteps;
     }
 }

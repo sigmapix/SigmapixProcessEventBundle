@@ -10,9 +10,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\CoreBundle\Form\Type\ImmutableArrayType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class ProcessEntityAdmin
@@ -33,6 +31,8 @@ class ProcessEntityAdmin extends AbstractAdmin
             ->add('output')
             ->add('errorOutput')
             ->add('status')
+            ->add('processedAt')
+            ->add('finishedAt')
             ->add('progress');
     }
 
@@ -51,6 +51,8 @@ class ProcessEntityAdmin extends AbstractAdmin
         $listMapper
             ->add('name')
             ->add('statusName', null, ['label' => 'status'])
+            ->add('processedAt')
+            ->add('finishedAt')
             ->add('progress', null, ['template' => 'SigmapixProcessEventBundle:Admin:list__progress.html.twig'])
             ->add('_action', null, ['actions' => $actions]);
     }
@@ -61,6 +63,9 @@ class ProcessEntityAdmin extends AbstractAdmin
             ->add('name')
             ->add('className')
             ->add('status')
+            ->add('processedAt', null, ['disabled' => true, 'date_widget' => 'single_text', 'time_widget' => 'single_text'])
+            ->add('finishedAt', null, ['disabled' => true, 'date_widget' => 'single_text', 'time_widget' => 'single_text'])
+            ->add('finishedAtStepsAsString', TextareaType::class, ['disabled' => true, 'attr' => ['rows' => 3]])
             ->add('args', TextareaType::class)
            ;
         $form->getFormBuilder()->get('args')->addModelTransformer(new CallbackTransformer(
@@ -91,7 +96,10 @@ class ProcessEntityAdmin extends AbstractAdmin
             ->add('filePath')
             ->add('output')
             ->add('errorOutput')
-            ->add('status')
+            ->add('statusName')
+            ->add('processedAt')
+            ->add('finishedAt')
+            ->add('finishedAtStepsAsString')
             ->add('progress');
     }
 
